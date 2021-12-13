@@ -17,7 +17,7 @@ resource "aws_iam_role" "studiovpc-notebook-role" {
   )
   force_detach_policies = false
   managed_policy_arns = [
-    format("arn:aws:iam::%s:policy/studio-vpc-infra-IAM-XE8WWDTVFFJ2-SageMakerNotebookInstancePolicy-1JLTIEYH5S0BD",data.aws_caller_identity.current.account_id)
+    format("arn:aws:iam::%s:policy/studio-vpc-infra-IAM-SageMakerNotebookInstancePolicy",data.aws_caller_identity.current.account_id)
   ]
   max_session_duration = 3600
   name                 = "studiovpc-notebook-role"
