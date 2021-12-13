@@ -2,6 +2,7 @@
 # aws_s3_bucket_policy.studiovpc-data:
 resource "aws_s3_bucket_policy" "studiovpc-data-policy" {
   bucket = format("studiovpc-data-%s",data.aws_caller_identity.current.account_id)
+  depends_on=[aws_s3_bucket.studiovpc-data-bucket]
   policy = jsonencode(
     {
       Statement = [
