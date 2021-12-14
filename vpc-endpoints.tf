@@ -336,3 +336,101 @@ resource "aws_vpc_endpoint" "vpce-sts" {
 
   timeouts {}
 }
+
+
+resource "aws_vpc_endpoint" "vpce-ec2messages" {
+  policy = jsonencode(
+    {
+      Statement = [
+        {
+          Action    = "*"
+          Effect    = "Allow"
+          Principal = "*"
+          Resource  = "*"
+        },
+      ]
+      Version = "2012-10-17"
+    }
+  )
+  private_dns_enabled = true
+  route_table_ids     = []
+  security_group_ids = [
+    aws_security_group.sg-0e74853ab215fa9d4.id,
+  ]
+
+  service_name = format("com.amazonaws.%s.ec2messages",data.aws_region.current.name)
+  subnet_ids = [
+    aws_subnet.subnet-0cdf0919b0826f4b7.id,
+  ]
+  tags              = {}
+  tags_all          = {}
+  vpc_endpoint_type = "Interface"
+  vpc_id            = aws_vpc.vpc-0068c71bc314adf60.id
+
+  timeouts {}
+}
+
+
+resource "aws_vpc_endpoint" "vpce-ec2" {
+  policy = jsonencode(
+    {
+      Statement = [
+        {
+          Action    = "*"
+          Effect    = "Allow"
+          Principal = "*"
+          Resource  = "*"
+        },
+      ]
+      Version = "2012-10-17"
+    }
+  )
+  private_dns_enabled = true
+  route_table_ids     = []
+  security_group_ids = [
+    aws_security_group.sg-0e74853ab215fa9d4.id,
+  ]
+
+  service_name = format("com.amazonaws.%s.ec2",data.aws_region.current.name)
+  subnet_ids = [
+    aws_subnet.subnet-0cdf0919b0826f4b7.id,
+  ]
+  tags              = {}
+  tags_all          = {}
+  vpc_endpoint_type = "Interface"
+  vpc_id            = aws_vpc.vpc-0068c71bc314adf60.id
+
+  timeouts {}
+}
+
+resource "aws_vpc_endpoint" "vpce-ssmmessages" {
+  policy = jsonencode(
+    {
+      Statement = [
+        {
+          Action    = "*"
+          Effect    = "Allow"
+          Principal = "*"
+          Resource  = "*"
+        },
+      ]
+      Version = "2012-10-17"
+    }
+  )
+  private_dns_enabled = true
+  route_table_ids     = []
+  security_group_ids = [
+    aws_security_group.sg-0e74853ab215fa9d4.id,
+  ]
+
+  service_name = format("com.amazonaws.%s.ssmmessages",data.aws_region.current.name)
+  subnet_ids = [
+    aws_subnet.subnet-0cdf0919b0826f4b7.id,
+  ]
+  tags              = {}
+  tags_all          = {}
+  vpc_endpoint_type = "Interface"
+  vpc_id            = aws_vpc.vpc-0068c71bc314adf60.id
+
+  timeouts {}
+}
