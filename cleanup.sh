@@ -18,17 +18,27 @@ if [[ "$domid" != "null" ]];then
     fi
     echo "cleanup $fsid"
     aws efs delete-file-system --file-system-id $fsid 2> /dev/null
-    echo "cleanup $sgin"
-    sgrid=$(aws ec2 describe-security-group-rules --filters Name=vpc-id,Values=$vpcid Name=group-id,Values=$sgin --query SecurityGroupRules[0].SecurityGroupRuleId | jq -r )
+    echo "cleanup $sgin rules "
+    sgrid=$(aws ec2 describe-security-group-rules --filters Name=group-id,Values=$sgin --query SecurityGroupRules[0].SecurityGroupRuleId | jq -r )
     if [[ "$sgrid" != "null" ]];then
         aws ec2 revoke-security-group-ingress --group-id $sgin --security-group-rule-ids $sgrid
     fi
-    aws ec2 delete-security-group --group-id $sgin
-    echo "cleanup $sgout"
-    sgrid=$(aws ec2 describe-security-group-rules --filters Name=vpc-id,Values=$vpcid Name=group-id,Values=$sgout --query SecurityGroupRules[0].SecurityGroupRuleId | jq -r )
+    
+    echo "cleanup $sgout rules"
+    sgrid=$(aws ec2 describe-security-group-rules --filters Name=group-id,Values=$sgout --query SecurityGroupRules[0].SecurityGroupRuleId | jq -r )
     if [[ "$sgrid" != "null" ]];then
         aws ec2 revoke-security-group-egress --group-id $sgout --security-group-rule-ids $sgrid
     fi 
-    aws ec2 delete-security-group --group-id $sgout
+    sleep 5
+    
+    # dependant object
+    aws ec2 delete-security-group --group-id $sgin
+    sleep 10
+ # dependant object
+    aws ec2 delete-security-group --group-id $sgout 2> /dev/null
+    while [[ $? -ne 0 ]]; do
+        sleep 15
+        aws ec2 delete-security-group --group-id $sgout 2> /dev/null
+    done
 fi
 set -e

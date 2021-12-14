@@ -2,7 +2,6 @@
 # aws_s3_bucket.studiovpc-data:
 resource "aws_s3_bucket" "studiovpc-data-bucket" {
   bucket         = format("studiovpc-data-%s",data.aws_caller_identity.current.account_id)
-  hosted_zone_id = "Z1BKCTXD74EZPE"
   request_payer  = "BucketOwner"
   tags           = {}
   tags_all       = {}
